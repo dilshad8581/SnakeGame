@@ -44,25 +44,27 @@ game_over = False
 score = 0
 
 def reset_game():
-    global snake , food ,velocityX,velocityY,snake_body,game_over,score
-    snake=Tile(TILE_SIZE * 5, TILE_SIZE * 5) #single tile, snake's head
-    food=Tile(TILE_SIZE * 10, TILE_SIZE * 10)   
+    global snake , food ,velocityX,velocityY,snake_body,game_over,score   
+    snake = Tile(TILE_SIZE * 5, TILE_SIZE * 5) #single tile, snake's head
+    food = Tile(TILE_SIZE * 10, TILE_SIZE * 10)
     velocityX=0
     velocityY=0
     snake_body=[]
     game_over=False
     score=0
-    draw()
-    window.bind("<KeyRelease>", change_direction)
 
 #game loop
 def change_direction(e): 
 
     global velocityX, velocityY, game_over
+    if (e.keysym == "space" and game_over):
+        reset_game()
+        return 
+    
     if (game_over):
-        if (e.keysym == "space"):
-            reset_game()
-        return #edit this code to reset game variables to play again
+        return
+    
+        
 
     if (e.keysym == "Up" and velocityY != 1):
         velocityX = 0
@@ -112,7 +114,6 @@ def move():
             prev_tile = snake_body[i-1]
             tile.x = prev_tile.x
             tile.y = prev_tile.y
-    
     snake.x += velocityX * TILE_SIZE
     snake.y += velocityY * TILE_SIZE
 
@@ -131,7 +132,6 @@ def draw():
     if (game_over):
         canvas.create_text(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, font = "Arial 20", text = f"Game Over: {score}", fill = "white")
         canvas.create_text(WINDOW_WIDTH/2, WINDOW_HEIGHT/2 + 30, font = "Arial 15", text = "Press Space to Play Again", fill = "white")
-        change_direction
         
     else:
         canvas.create_text(30, 20, font = "Arial 10", text = f"Score: {score}", fill = "white")
